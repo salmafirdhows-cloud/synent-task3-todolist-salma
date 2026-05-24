@@ -1,55 +1,197 @@
-tasks = []
+import tkinter as tk
+from tkinter import messagebox
+import json
 
-while True:
-    print("\n--- TO-DO LIST MENU ---")
-    print("1. View Tasks")
-    print("2. Add Task")
-    print("3. Delete Task")
-    print("4. Exit")
+FILE_NAME = "tasks.json"
 
-    choice = input("Enter your choice (1-4): ")
+# ---------------- LOAD TASKS ----------------
+def load_tasks():
+    try:
+        with open(FILE_NAME, "r") as file:
+            tasks = json.load(file)
 
-    # View Tasks
-    if choice == "1":
-        if len(tasks) == 0:
-            print("No tasks available.")
-        else:
-            print("\nYour Tasks:")
-            for i, task in enumerate(tasks, start=1):
-                print(f"{i}. {task}")
+            for task in tasks:
+                task_listbox.insert(tk.END, task)
 
-    # Add Task
-    elif choice == "2":
-        new_task = input("Enter new task: ")
-        tasks.append(new_task)
-        print("Task added successfully!")
+    except FileNotFoundError:
+        pass
 
-    # Delete Task
-    elif choice == "3":
-        if len(tasks) == 0:
-            print("No tasks to delete.")
-        else:
-            print("\nYour Tasks:")
-            for i, task in enumerate(tasks, start=1):
-                print(f"{i}. {task}")
+# ---------------- SAVE TASKS ----------------
+def save_tasks():
+    tasks = task_listbox.get(0, tk.END)
 
-            try:
-                task_num = int(input("Enter task number to delete: "))
-                
-                if 1 <= task_num <= len(tasks):
-                    removed = tasks.pop(task_num - 1)
-                    print(f"Task '{removed}' deleted successfully!")
-                else:
-                    print("Invalid task number.")
+    with open(FILE_NAME, "w") as file:
+        json.dump(list(tasks), file)
 
-            except ValueError:
-                print("Please enter a valid number.")
+# ---------------- ADD TASK ----------------
+def add_task():
+    task = task_entry.get()
 
-    # Exit
-    elif choice == "4":
-        print("Exiting To-Do List App...")
-        break
+    if task != "":
+        formatted_task = f"🕒 {task}"
 
-    # Invalid Input
+        task_listbox.insert(tk.END, formatted_task)
+
+        task_entry.delete(0, tk.END)
+
+        save_tasks()
+
     else:
-        print("Invalid choice. Please enter 1-4.")
+        messagebox.showwarning("Warning", "Please enter a task!")
+
+# ---------------- DELETE TASK ----------------
+def delete_task():
+    try:
+        selected_task = task_listbox.curselection()[0]
+
+        task_listbox.delete(selected_task)
+
+        save_tasks()
+
+    except:
+        messagebox.showwarning("Warning", "Please select a task!")
+
+# ---------------- COMPLETE TASK ----------------
+def complete_task():
+    try:
+        selected_task_index = task_listbox.curselection()[0]
+
+        selected_task = task_listbox.get(selected_task_index)
+
+        if not selected_task.startswith("✅"):
+            updated_task = selected_task.replace("🕒", "✅")
+
+            task_listbox.delete(selected_task_index)
+
+            task_listbox.insert(selected_task_index, updated_task)
+
+            save_tasks()
+
+    except:
+        messagebox.showwarning("Warning", "Please select a task!")
+
+# ---------------- MAIN WINDOW ----------------
+root = tk.Tk()
+
+root.title("To-Do App")
+root.geometry("650x650")
+root.resizable(False, False)
+
+# Pastel background
+root.config(bg="#FFF6FB")
+
+# ---------------- TITLE ----------------
+title = tk.Label(
+    root,
+    text="📝 Salma's To-Do App 💅🏻",
+    font=("Arial", 22, "bold"),
+    bg="#FFF6FB",
+    fg="#5E548E"
+)
+
+title.pack(pady=20)
+
+# ---------------- INPUT ----------------
+task_entry = tk.Entry(
+    root,
+    width=35,
+    font=("Arial", 14),
+    bg="#F7F1FF",
+    fg="#5E548E",
+    relief="flat",
+    bd=5,
+    insertbackground="#5E548E"
+)
+
+task_entry.pack(pady=10)
+
+# ---------------- BUTTON FRAME ----------------
+button_frame = tk.Frame(root, bg="#FFF6FB")
+
+button_frame.pack(pady=10)
+
+# ---------------- ADD BUTTON ----------------
+add_button = tk.Button(
+    button_frame,
+    text="Add Task",
+    font=("Arial", 12, "bold"),
+    bg="#F8C8DC",
+    fg="#5E548E",
+    activebackground="#F4B6CF",
+    activeforeground="#5E548E",
+    padx=10,
+    pady=5,
+    relief="flat",
+    command=add_task
+)
+
+add_button.grid(row=0, column=0, padx=10)
+
+# ---------------- COMPLETE BUTTON ----------------
+complete_button = tk.Button(
+    button_frame,
+    text="Complete",
+    font=("Arial", 12, "bold"),
+    bg="#C7F0DB",
+    fg="#5E548E",
+    activebackground="#B5EAD7",
+    activeforeground="#5E548E",
+    padx=10,
+    pady=5,
+    relief="flat",
+    command=complete_task
+)
+
+complete_button.grid(row=0, column=1, padx=10)
+
+# ---------------- DELETE BUTTON ----------------
+delete_button = tk.Button(
+    button_frame,
+    text="Delete",
+    font=("Arial", 12, "bold"),
+    bg="#DCC6FF",
+    fg="#5E548E",
+    activebackground="#CDB4FF",
+    activeforeground="#5E548E",
+    padx=10,
+    pady=5,
+    relief="flat",
+    command=delete_task
+)
+
+delete_button.grid(row=0, column=2, padx=10)
+
+# ---------------- LIST FRAME ----------------
+list_frame = tk.Frame(root, bg="#FFF6FB")
+
+list_frame.pack(pady=20)
+
+# ---------------- SCROLLBAR ----------------
+scrollbar = tk.Scrollbar(list_frame)
+
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+# ---------------- TASK LIST ----------------
+task_listbox = tk.Listbox(
+    list_frame,
+    width=50,
+    height=15,
+    font=("Arial", 12),
+    bg="#F7F1FF",
+    fg="#5E548E",
+    selectbackground="#DCC6FF",
+    selectforeground="#5E548E",
+    relief="flat",
+    bd=5,
+    yscrollcommand=scrollbar.set
+)
+
+task_listbox.pack()
+
+scrollbar.config(command=task_listbox.yview)
+
+# ---------------- LOAD SAVED TASKS ----------------
+load_tasks()
+
+# ---------------- RUN APP ----------------
+root.mainloop()
