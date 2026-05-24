@@ -1,18 +1,48 @@
-# synent-task3-todolist-salma
-# Python To-Do List CLI App
+# To-Do GUI App
 
-A simple command-line To-Do List application built using Python.
+A modern pastel-themed To-Do List desktop application built using Python and Tkinter.
 
-## Features
+## ✨ Features
 - Add tasks
-- View tasks
+- Mark tasks as completed
 - Delete tasks
-- Menu-driven interface
+- Scrollable task list
+- Pastel-themed graphical user interface
+- Automatic task saving using JSON
+- User-friendly desktop application
 
-## Technologies Used
+## 🛠️ Technologies Used
 - Python
+- Tkinter
+- JSON
 
-## How to Run
+## 📂 Project Structure
 
 ```bash
+.
+├── todo.py
+├── tasks.json
+└── README.md
+```
+
+▶️ How to Run:
+Make sure Python is installed.
+Run the following command in terminal:
 python todo.py
+
+💾 Data Storage
+
+Tasks are automatically saved in tasks.json.
+
+🎯 Project Objective
+
+This project was developed as part of the Python Development Internship Program to demonstrate:
+
+GUI development using Tkinter
+File handling with JSON
+Event-driven programming
+User interface customization
+
+👩‍💻 Author
+
+Salma
