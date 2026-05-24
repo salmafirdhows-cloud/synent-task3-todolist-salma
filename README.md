@@ -26,7 +26,9 @@ A modern pastel-themed To-Do List desktop application built using Python and Tki
 ```
 
 ▶️ How to Run:
+
 Make sure Python is installed.
+
 Run the following command in terminal:
 python todo.py
 
