@@ -48,3 +48,11 @@ User interface customization
 👩‍💻 Author
 
 Salma
+
+## 📸 Screenshots
+
+### Main Interface
+![Main UI](screenshots/Home.png)
+
+### Task Management
+![Tasks](screenshots/Tasks.png)
