@@ -55,4 +55,4 @@ Salma
 ![Main UI](screenshots/Home.png)
 
 ### Task Management
-![Tasks](screenshots/Tasks.png)
+![Tasks](screenshots/tasks.png)
